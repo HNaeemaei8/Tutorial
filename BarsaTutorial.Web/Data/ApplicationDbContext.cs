@@ -1,5 +1,7 @@
 ﻿using BarsaTutorial.Web.Models.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BarsaTutorial.Web.Data
 {
@@ -44,6 +46,19 @@ namespace BarsaTutorial.Web.Data
             modelBuilder.Entity<Category>().HasKey(e => e.ID);
             modelBuilder.Entity<Category>().Property(e => e.Title).HasMaxLength(100).IsUnicode();
             modelBuilder.Entity<Category>().ToTable("Categories");
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return base.SaveChangesAsync(cancellationToken);
+
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
     }
 }

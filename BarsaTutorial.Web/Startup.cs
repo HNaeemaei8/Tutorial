@@ -1,4 +1,5 @@
 using BarsaTutorial.Web.Data;
+using BarsaTutorial.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +43,11 @@ namespace BarsaTutorial.Web
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+
+            services.AddScoped<CategoryService>();
+            services.AddScoped<FileTypeService>();
+            services.AddScoped<EducationService>();
 
             #region Authentication
 
