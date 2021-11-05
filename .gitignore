@@ -52,6 +52,4 @@ Thumbs.db
 **/node_modules/*
 *gentelella-rtl-1.4.-0/*
 **/dist/*
-**/wwwroot/files/**
-SimcardInquiryService/.vs/SimcardInquiryService/v16/.suo
-.vs/APCSAdmin/v16/.suo
+**/wwwroot/files/** 

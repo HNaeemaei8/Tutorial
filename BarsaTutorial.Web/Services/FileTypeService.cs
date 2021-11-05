@@ -54,7 +54,19 @@ namespace BarsaTutorial.Web.Services
                     LessonCount = item.Lessons.Count()
                 };
 
-                cat.Educations.Append(edu);
+                foreach (var les in item.Lessons)
+                {
+                    var lsn = new LessonViewModel()
+                    {
+                        ID = les.ID,
+                        FileAddress = les.FileAddress,
+                        LessonCode = les.LessonCode,
+                        Title = les.Title
+                    };
+                    edu.Lessons.Add(lsn);
+                }
+
+                cat.Educations.Add(edu);
             }
 
             return cat;

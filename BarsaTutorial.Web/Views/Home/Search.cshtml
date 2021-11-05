@@ -1,0 +1,27 @@
+﻿@model IEnumerable<BarsaTutorial.Web.Models.ViewModels.GetEducationsResponse>
+
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>جستحو</h2>
+
+<section class="last-news-section border-radius margin-top-60">
+    <header><i class="icons icon-doc-2"></i>  <h3> جستجو</h3> </header>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>
+               
+                <h2> <a href="@item.CategoryTitle"> @item.Title </a></h2>
+                <p>
+                    @item.FileTypeTitle
+                </p>
+                <span class="date-publish"><i class="fa fa-calendar"></i>  </span>
+            </li>
+        }
+
+
+    </ul>
+</section>

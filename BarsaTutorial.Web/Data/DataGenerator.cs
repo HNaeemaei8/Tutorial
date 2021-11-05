@@ -27,11 +27,12 @@ namespace BarsaTutorial.Web.Data
                     new FileType
                     {
                         Title = "Video"
-                    },
-                    new FileType
-                    {
-                        Title = "MP3"
-                    });
+                    }
+                    //new FileType
+                    //{
+                    //    Title = "MP3"
+                    //}
+                    );
 
                 context.Categories.AddRange(
                     new Category
@@ -41,11 +42,12 @@ namespace BarsaTutorial.Web.Data
                     new Category
                     {
                         Title = "دیتابیس"
-                    },
-                    new Category
-                    {
-                        Title = "بیزنس بانکی"
-                    });
+                    }
+                    //new Category
+                    //{
+                    //    Title = "بیزنس بانکی"
+                    //}
+                    );
 
                 context.SaveChanges();
             }

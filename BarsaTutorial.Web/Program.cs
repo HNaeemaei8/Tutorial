@@ -28,8 +28,7 @@ namespace BarsaTutorial.Web
                 DataGenerator.Initialize(services);
             }
 
-            //Continue to run the application
-            host.Run();
+            //Continue to run the application 
 
             await host.RunAsync();
         }

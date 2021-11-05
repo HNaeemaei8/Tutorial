@@ -1,0 +1,88 @@
+﻿@model BarsaTutorial.Web.Models.ViewModels.NewEducationRequest
+@using BarsaTutorial.Web.Models.Models;
+<h4>Education</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="AddEducation" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryID" class="control-label"></label>
+                <select asp-for="CategoryID" class="form-control"
+                        asp-items="ViewBag.Categories1">
+                    <option>انتخاب کنید</option>
+                </select>
+                <span asp-validation-for="CategoryID" classext-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FileTypeID" class="control-label"></label>
+                <select asp-for="FileTypeID" class="form-control"
+                        asp-items="ViewBag.FileTypes1">
+                    <option>انتخاب کنید</option>
+                </select>
+                <span asp-validation-for="FileTypeID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" value="افزودن درس" class="btn btn-primary" id="addLesson" />
+            </div>
+            <div id="Lessons0">
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="افزودن" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Educations">بازگشت</a>
+</div>
+
+<script>
+
+    // Wait until the window finishes loaded before executing any script
+    window.onload = function () {
+        // Initialize the activityNumber
+        var activityNumber = 0;
+
+        // Select the add_activity button
+        var addButton = document.getElementById("addLesson");
+
+        // Select the table element  
+
+
+        // Attach handler to the button click event
+        addButton.onclick = function () {
+            debugger;
+            var div = document.getElementById('Lessons' + activityNumber);
+            var newElement = document.createElement('div'); // create new textarea
+
+            newElement.setAttribute('id', 'Lessons' + (activityNumber + 1));
+
+            div.parentNode.insertBefore(newElement, div.nextSibling);
+
+            
+            var lessons = document.getElementById('Lessons' + activityNumber);
+
+            let element1 = '<div class="form-group col-md-4 col-sm-4 col-xs-12"><label for="Lessons[' + activityNumber + '].Title" Text="" class="control-label">عنوان جلسه</label> <input id="Lessons[' + activityNumber + '].Title" name="Lessons[' + activityNumber + '].Title" class="form-control" /><span asp-validation-for="Lessons[' + activityNumber + '].Title" class="text-danger"></span> </div>';
+            let element2 = '<div class="form-group col-md-4 col-sm-4 col-xs-12"><label for="Lessons[' + activityNumber + '].LessonCode" Text="کد جلسه" class="control-label" >کد جلسه</label> <input type="number" id="Lessons[' + activityNumber + '].LessonCode" name="Lessons[' + activityNumber + '].LessonCode" class="form-control" /><span asp-validation-for="Lessons[' + activityNumber + '].LessonCode" class="text-danger"></span> </div>';
+            let element3 = '<div class="form-group col-md-4 col-sm-4 col-xs-12"><label for="Lessons[' + activityNumber + '].FileAddress"  Text="آدرس فایل" class="control-label" >آدرس فایل</label> <input  type="file" id="Lessons[' + activityNumber + '].FileAddress" name="Lessons[' + activityNumber + '].FileAddress" class="form-control" /><span asp-validation-for="Lessons[' + activityNumber + '].FileAddress" class="text-danger"></span> </div>';
+
+            // Add a new row to the table using the correct activityNumber
+            lessons.innerHTML += '<div>' + element1 + element2 + element3 + '</div>';
+
+            // Increment the activityNumber
+            activityNumber += 1;
+        }
+
+    }
+
+</script>
+

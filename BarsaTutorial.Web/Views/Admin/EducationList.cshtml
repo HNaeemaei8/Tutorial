@@ -1,0 +1,81 @@
+﻿@model IEnumerable<BarsaTutorial.Web.Models.ViewModels.GetEducationsResponse>
+
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                طراحی جدول
+                <small>طراحی شخصی شده</small>
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#">تنظیمات 1</a>
+                        </li>
+                        <li>
+                            <a href="#">تنظیمات 2</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="x_content">
+
+            <p>با افزودن کلاس <code dir="ltr">bulk_action</code> برای جدول، جدول دارای  اعمال همگانی می‌شود.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped jambo_table bulk_action">
+                    <thead>
+                        <tr class="headings">
+                            <th>
+                                <input type="checkbox" id="check-all" class="flat">
+                            </th>
+                            <th class="column-title">عنوان</th>
+                            <th class="column-title">دسته بندی</th>
+                            <th class="column-title">نوع فایل</th>
+                            <th class="column-title">تعداد جلسات</th>
+                           
+                            <th class="column-title no-link last">
+                                <span class="nobr">مشاهده</span>
+                            </th>
+                            
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="@(item.ID % 2 == 0? "even pointer":"odd pointer")">
+                                <td class="a-center ">
+                                    <input type="checkbox" class="flat" name="table_records">
+                                </td>
+                                <td class=" ">@item.Title</td>
+                                <td class=" ">@item.CategoryTitle</td>
+                                <td class=" ">@item.FileTypeTitle </td>
+                                <td class=" ">@item.LessonCount</td>
+
+                                <td class=" last">
+                                    <a asp-controller="Admin" asp-action="EditEducation" asp-route-id="@item.ID">مشاهده</a>
+                                </td>
+                            </tr>
+
+                        }
+                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

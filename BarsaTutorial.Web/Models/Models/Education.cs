@@ -8,7 +8,7 @@ namespace BarsaTutorial.Web.Models.Models
         public string Title { get; set; }
         public int CategoryID { get; set; }
         public int FileTypeID { get; set; }
-        public IEnumerable<Lesson> Lessons { get; set; } = new HashSet<Lesson>();
+        public List<Lesson> Lessons { get; set; } = new List<Lesson>();
         public Category Category { get; set; }
         public FileType FileType { get; set; }
     }

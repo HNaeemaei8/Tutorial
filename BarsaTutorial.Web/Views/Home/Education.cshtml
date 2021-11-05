@@ -1,0 +1,80 @@
+﻿@model  IEnumerable<BarsaTutorial.Web.Models.ViewModels.GetEducationsResponse>
+
+
+@foreach (var item in Model)
+{
+
+
+<div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+              @item.Title
+                <small> دسته بندی :@item.CategoryTitle</small>
+                <small> نوع فایل :@item.FileTypeTitle</small>
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+  
+                <li>
+                    <a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <ul class="list-unstyled timeline">
+                @foreach (var les in item.Lessons)
+                {
+
+
+                <li>
+                    <div class="block">
+                        <div class="tags">
+                            <a href="" class="tag">
+                                <span>درس @les.LessonCode</span>
+                            </a>
+                        </div>
+                        <div class="block_content">
+                            <h2 class="title">
+                                @les.Title
+                            </h2>
+                            <div class="byline">
+                                <a href='/@les.FileAddress' class="btn btn-primary btn-sm">دانلود</a> 
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#@("VideoOf" + @item.ID.ToString())">
+                                    نمایش
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="modal fade" id="@("VideoOf" + @item.ID.ToString())" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <video controls id="@("VideoPlayer" + @item.ID.ToString())" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
+                                            <source src='/@les.FileAddress' type="video/mp4">
+                                            Your browser doesn't support HTML5 video tag.
+                                        </video>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li> 
+                }
+            </ul>
+
+        </div>
+    </div>
+</div>
+}

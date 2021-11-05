@@ -10,7 +10,7 @@ namespace BarsaTutorial.Web.Models.ViewModels
         public int ID { get; set; }
         public string Title { get; set; }
 
-        public IEnumerable<GetEducationsResponse> Educations { get; set; } = new HashSet<GetEducationsResponse>();
+        public List<GetEducationsResponse> Educations { get; set; } = new List<GetEducationsResponse>();
     }
 
     public class NewFileTypeRequest
@@ -21,5 +21,14 @@ namespace BarsaTutorial.Web.Models.ViewModels
     public class EditFileTypeRequest : NewCategoryRequest
     {
         public int ID { get; set; }
+    }
+
+    public class FileTypeViewModel
+    {
+        public int ID { get; set; }
+        public string Title { get; set; }
+        public string ActionName { get; set; }
+
+
     }
 }

@@ -1,9 +1,12 @@
 ﻿using BarsaTutorial.Web.Data;
 using BarsaTutorial.Web.Models.Models;
 using BarsaTutorial.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,19 +19,23 @@ namespace BarsaTutorial.Web.Services
 
         }
 
-        public EducationService(ApplicationDbContext applicationDbContext)
+        public EducationService(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment)
         {
             ApplicationDbContext = applicationDbContext;
+            WebHostEnvironment = webHostEnvironment;
         }
 
         public ApplicationDbContext ApplicationDbContext { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         public async Task<IEnumerable<GetEducationsResponse>> GetEducations(GetEducationsRequest request)
         {
             var query = ApplicationDbContext.Educations
                 .Include(e => e.Category)
                 .Include(e => e.FileType)
-                .Include(e => e.Lessons).AsNoTracking().AsQueryable();
+                .Include(e => e.Lessons)
+                .AsNoTracking()
+                .AsQueryable();
 
             if (request.CategoryID.HasValue)
                 query = query.Where(e => e.CategoryID == request.CategoryID.Value);
@@ -39,8 +46,12 @@ namespace BarsaTutorial.Web.Services
             if (request.ID.HasValue)
                 query = query.Where(e => e.ID == request.ID.Value);
 
-            if (string.IsNullOrEmpty(request.Title))
-                query = query.Where(e => e.Title.Contains(request.Title));
+            if (!string.IsNullOrEmpty(request.Title))
+                query = query
+                        .Where(p => EF.Functions.Like(p.Title, $"%{request.Title}%") ||
+                        EF.Functions.Like(p.FileType.Title, $"%{request.Title}%") ||
+                        EF.Functions.Like(p.Category.Title, $"%{request.Title}%"));
+            //query = query.Where(e => e.Title.Contains(request.Title));
 
             var educations = await query.ToListAsync();
 
@@ -59,19 +70,52 @@ namespace BarsaTutorial.Web.Services
                     LessonCount = item.Lessons.Count()
                 };
 
+                foreach (var les in item.Lessons)
+                {
+                    var lsn = new LessonViewModel()
+                    {
+                        ID = les.ID,
+                        FileAddress = les.FileAddress,
+                        LessonCode = les.LessonCode,
+                        Title = les.Title
+                    };
+                    edu.Lessons.Add(lsn);
+                }
+
                 responseList.Add(edu);
             }
             return responseList;
         }
 
-        public async Task<Education> GetEducation(int id)
+        public async Task<EditEducationRequest> GetEducation(int id)
         {
             var education = await ApplicationDbContext.Educations
                 .Include(e => e.Category)
                 .Include(e => e.FileType)
                 .Include(e => e.Lessons).AsNoTracking().SingleAsync(e => e.ID == id);
 
-            return education;
+            var edu = new EditEducationRequest
+            {
+                CategoryID = education.CategoryID,
+                FileTypeID = education.FileTypeID,
+                ID = education.ID,
+                Title = education.Title,
+            };
+
+            foreach (var item in education.Lessons)
+            {
+                var lsn = new EditLessonRequest
+                {
+                    ID = item.ID,
+                    Title = item.Title,
+                    OldFileAddress = item.FileAddress,
+                    LessonCode = item.LessonCode
+                };
+
+                edu.Lessons.Add(lsn);
+            }
+
+            return edu;
         }
 
         public async Task<Education> AddEducation(NewEducationRequest request)
@@ -88,10 +132,10 @@ namespace BarsaTutorial.Web.Services
                 var lesson = new Lesson
                 {
                     Title = item.Title,
-                    FileAddress = item.FileAddress,
+                    FileAddress = await UploadFile(item.FileAddress),
                     LessonCode = item.LessonCode
                 };
-                education.Lessons.Append(lesson);
+                education.Lessons.Add(lesson);
             }
 
             await ApplicationDbContext.Educations.AddAsync(education);
@@ -119,15 +163,17 @@ namespace BarsaTutorial.Web.Services
                     var newLesson = new Lesson
                     {
                         Title = item.Title,
-                        FileAddress = item.FileAddress,
+                        FileAddress = await UploadFile(item.FileAddress),
                         LessonCode = item.LessonCode
                     };
-                    education.Lessons.Append(newLesson);
+                    education.Lessons.Add(newLesson);
                 }
                 else
                 {
                     lesson.LessonCode = item.LessonCode;
-                    lesson.FileAddress = item.FileAddress;
+                    var file =  await UploadFile(item.FileAddress);
+                    if (!string.IsNullOrEmpty(file))
+                        lesson.FileAddress = file;
                     lesson.Title = item.Title;
 
                 }
@@ -162,10 +208,10 @@ namespace BarsaTutorial.Web.Services
             var lesson = new Lesson
             {
                 Title = request.Title,
-                FileAddress = request.FileAddress,
+                FileAddress = await UploadFile(request.FileAddress),
                 LessonCode = request.LessonCode
             };
-            education.Lessons.Append(lesson);
+            education.Lessons.Add(lesson);
 
             ApplicationDbContext.Educations.Update(education);
             await ApplicationDbContext.SaveChangesAsync();
@@ -186,6 +232,28 @@ namespace BarsaTutorial.Web.Services
 
             return await ApplicationDbContext.SaveChangesAsync();
 
+        }
+
+        public async Task<string> UploadFile(IFormFile file)
+        {
+            if (file != null)
+            {
+                //upload files to wwwroot
+                var fileName = Path.GetFileName(file.FileName);
+                var filePath = Path.Combine(WebHostEnvironment.WebRootPath, "files", fileName);
+
+                using (var fileSteam = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileSteam);
+                }
+                //your logic to save filePath to database, for example
+
+                return Path.Combine("files", fileName);
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }

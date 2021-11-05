@@ -6,7 +6,6 @@ namespace BarsaTutorial.Web.Models.ViewModels
     {
         [Required]
         public string Username { get; set; }
-        [Required]
         public string Password { get; set; }
     }
-}
+} 
