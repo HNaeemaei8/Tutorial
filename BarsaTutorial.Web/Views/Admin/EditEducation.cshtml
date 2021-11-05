@@ -1,5 +1,6 @@
 ﻿@model BarsaTutorial.Web.Models.ViewModels.EditEducationRequest
 @using BarsaTutorial.Web.Models.Models;
+@using BarsaTutorial.Web.Models.ViewModels;
 <h4>Education</h4>
 <hr />
 <div class="row">
@@ -33,15 +34,35 @@
                 <input type="button" value="افزودن درس" class="btn btn-primary" id="addLesson" />
             </div>
             <div id="OldLessons">
-                @foreach (var item in Model.Lessons)
+                @for (int i = 0; i < Model.Lessons.Count(); i++)
                 {
-                    <div class="form-group col-md-4 col-sm-4 col-xs-12"><label asp-for="@item.Title" Text="" class="control-label">عنوان جلسه</label> <input asp-for="@item.Title" class="form-control" /><span asp-validation-for="@item.Title" class="text-danger"></span> </div>
-                    <div class="form-group col-md-4 col-sm-4 col-xs-12"><label asp-for="@item.LessonCode" Text="کد جلسه" class="control-label" >کد جلسه</label> <input type="number"  asp-for="@item.LessonCode" class="form-control" /><span asp-validation-for="@item.LessonCode" class="text-danger"></span> </div>
-                    <div class="form-group col-md-4 col-sm-4 col-xs-12"><label asp-for="@item.FileAddress"  Text="آدرس فایل" class="control-label" >آدرس فایل</label> <input type="file" value="@item.FileAddress" class="form-control" /><span asp-validation-for="@item.FileAddress" class="text-danger"></span> </div>
+                    var item = Model.Lessons[i];
+                    <div id='@("Lessons" + @i.ToString())'>
 
-                    }
+                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <label for='@("Lessons[" + @i + "].Title")' Text="" class="control-label">عنوان جلسه</label>
+                            <input id='@("Lessons[" + @i + "].Title")' name='@("Lessons[" + @i + "].Title")' class="form-control" value="@item.Title" />
+                            @*<span asp-validation-for='@("Lessons[" + @i + "].Title")' class="text-danger"></span>*@
+                        </div>
+
+                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <label for='@("Lessons[" + @i + "].LessonCode")' Text="کد جلسه" class="control-label">کد جلسه</label>
+                            <input type="number" id='@("Lessons[" + @i + "].LessonCode")' name='@("Lessons[" + @i + "].LessonCode")' class="form-control" value="@item.LessonCode" />
+                            @*<span asp-validation-for='@("Lessons[" + @i + "].LessonCode")' class="text-danger"></span>*@
+                        </div>
+                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <label for='@("Lessons[" + @i + "].FileAddress")' Text="آدرس فایل" class="control-label">آدرس فایل</label>
+                            <input type="file" id='@("Lessons[" + @i + "].FileAddress")' name='@("Lessons[" + @i + "].FileAddress")' class="form-control" value="@item.OldFileAddress" />
+                            @*<span asp-validation-for='@("Lessons[" + @i + "].FileAddress")' class="text-danger"></span>*@
+                        </div>
+
+                        @*<div class="form-group col-md-4 col-sm-4 col-xs-12"><label asp-for="@item.Title" Text="" class="control-label">عنوان جلسه</label> <input asp-for="@item.Title" class="form-control" /><span asp-validation-for="@item.Title" class="text-danger"></span> </div>
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12"><label asp-for="@item.LessonCode" Text="کد جلسه" class="control-label">کد جلسه</label> <input type="number" asp-for="@item.LessonCode" class="form-control" /><span asp-validation-for="@item.LessonCode" class="text-danger"></span> </div>
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12"><label asp-for="@item.FileAddress" Text="آدرس فایل" class="control-label">آدرس فایل</label> <input type="file" value="@item.FileAddress" class="form-control" /><span asp-validation-for="@item.FileAddress" class="text-danger"></span> </div>*@
+                    </div>
+                }
             </div>
-            <div id="Lessons0">
+            <div id='@("Lessons" + @Model.Lessons.Count().ToString())'>
 
             </div>
             <div class="form-group">
@@ -61,7 +82,7 @@
     window.onload = function () {
         debugger;
         // Initialize the activityNumber
-        var activityNumber = 0 ;
+        var activityNumber = @Model.Lessons.Count();
 
         // Select the add_activity button
         var addButton = document.getElementById("addLesson");
