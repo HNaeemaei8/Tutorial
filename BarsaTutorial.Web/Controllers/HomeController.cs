@@ -20,7 +20,7 @@ namespace BarsaTutorial.Web.Controllers
         private readonly EducationService _educationService;
         public FileTypeService Service { get; }
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbContext,FileTypeService service , EducationService education):base(dbContext)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbContext, FileTypeService service, EducationService education) : base(dbContext)
         {
             _logger = logger;
             Service = service;
@@ -28,7 +28,6 @@ namespace BarsaTutorial.Web.Controllers
             ViewData["FileTypes"] = FileTypes;
         }
 
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             var request = new GetEducationsRequest();
